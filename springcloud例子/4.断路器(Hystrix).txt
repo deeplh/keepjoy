@@ -1,0 +1,107 @@
+选中Hystrix,web
+actuator
+   
+
+ribbon
+
+    <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
+        
+        
+        @SpringBootApplication
+@EnableDiscoveryClient
+@EnableHystrix
+public class ServiceRibbonApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ServiceRibbonApplication.class, args);
+    }
+
+    @Bean
+    @LoadBalanced
+    RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+}
+
+
+@Service
+public class HelloService {
+
+    @Autowired
+    RestTemplate restTemplate;
+
+    @HystrixCommand(fallbackMethod = "hiError")
+    public String hiService(String name) {
+        return restTemplate.getForObject("http://SERVICE-HI/hi?name="+name,String.class);
+    }
+
+    public String hiError(String name) {
+        return "hi,"+name+",sorry,error!";
+    }
+}
+
+此时关闭 service-hi 工程，当我们再访问http://localhost:8764/hi?name=deep
+
+
+
+Feign
+
+feign.hystrix.enabled=true
+
+@FeignClient(value = "service-hi",fallback = SchedualServiceHiHystric.class)
+public interface SchedualServiceHi {
+    @RequestMapping(value = "/hi",method = RequestMethod.GET)
+    String sayHiFromClientOne(@RequestParam(value = "name") String name);
+}
+
+@Component
+public class SchedualServiceHiHystric implements SchedualServiceHi {
+    @Override
+    public String sayHiFromClientOne(String name) {
+        return "sorry "+name;
+    }
+}
+
+
+Hystrix Dashboard
+Feign 和 ribbon 一样
+ <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency> 
+        
+        其次启动程序注解是否添加
+
+@EnableCircuitBreaker
+@EnableHystrixDashboard
+
+如果都没问题那么检查下springboot 版本如果是2.0则需要添加 ServletRegistrationBean 因为springboot的默认路径不是 "/hystrix.stream"，只要在自己的项目里配置上下面的servlet就可以了
+
+    @Bean
+    public ServletRegistrationBean getServlet() {
+        HystrixMetricsStreamServlet streamServlet = new HystrixMetricsStreamServlet();
+        ServletRegistrationBean registrationBean = new ServletRegistrationBean(streamServlet);
+        registrationBean.setLoadOnStartup(1);
+        registrationBean.addUrlMappings("/hystrix.stream");
+        registrationBean.setName("HystrixMetricsStreamServlet");
+        return registrationBean;
+    }   
+    
+http://localhost:8764/hystrix
+
+监控流路径
+http://localhost:8764/hystrix.stream

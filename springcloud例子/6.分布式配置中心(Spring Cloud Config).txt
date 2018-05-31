@@ -1,0 +1,48 @@
+选中 web,config server,
+
+@SpringBootApplication
+@EnableConfigServer
+public class ConfigServerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ConfigServerApplication.class, args);
+    }
+}
+
+spring.application.name=config-server
+server.port=8888
+
+
+spring.cloud.config.server.git.uri=https://github.com/forezp/SpringcloudConfig/
+spring.cloud.config.server.git.searchPaths=respo
+spring.cloud.config.label=master
+spring.cloud.config.server.git.username=your username
+spring.cloud.config.server.git.password=your password
+
+http://localhost:8888/foo/dev
+
+
+
+spring.application.name=config-client
+spring.cloud.config.label=master
+spring.cloud.config.profile=dev
+spring.cloud.config.uri= http://localhost:8888/
+server.port=8881
+
+
+@SpringBootApplication
+@RestController
+public class ConfigClientApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ConfigClientApplication.class, args);
+    }
+
+    @Value("${foo}")
+    String foo;
+    @RequestMapping(value = "/hi")
+    public String hi(){
+        return foo;
+    }
+}
+http://localhost:8881/hi

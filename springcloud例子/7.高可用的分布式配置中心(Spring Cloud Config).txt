@@ -1,0 +1,27 @@
+1.利用eureka-server工程
+2.改造config-server,加入eureka discovery
+spring.application.name=config-server
+server.port=8888
+
+spring.cloud.config.server.git.uri=https://github.com/forezp/SpringcloudConfig/
+spring.cloud.config.server.git.searchPaths=respo
+spring.cloud.config.label=master
+spring.cloud.config.server.git.username= your username
+spring.cloud.config.server.git.password= your password
+eureka.client.serviceUrl.defaultZone=http://localhost:8889/eureka/
+
+
+3.改造config-client,加入eureka discovery
+spring.application.name=config-client
+spring.cloud.config.label=master
+spring.cloud.config.profile=dev
+#spring.cloud.config.uri= http://localhost:8888/
+
+eureka.client.serviceUrl.defaultZone=http://localhost:8889/eureka/
+spring.cloud.config.discovery.enabled=true
+spring.cloud.config.discovery.serviceId=config-server
+server.port=8881
+
+
+
+http://localhost:8881/hi

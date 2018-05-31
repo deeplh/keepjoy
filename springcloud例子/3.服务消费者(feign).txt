@@ -1,0 +1,35 @@
+1.新建一个spring-boot工程
+   取名为serice-feign，
+   选中Feign，web和eureka discovery
+   
+   eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka/
+server.port=8765
+spring.application.name=service-feign
+
+@SpringBootApplication
+@EnableDiscoveryClient
+@EnableFeignClients
+public class ServiceFeignApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ServiceFeignApplication.class, args);
+    }
+}
+
+
+@FeignClient(value = "service-hi")
+public interface SchedualServiceHi {
+    @RequestMapping(value = "/hi",method = RequestMethod.GET)
+    String sayHiFromClientOne(@RequestParam(value = "name") String name);
+}
+
+@RestController
+public class HiController {
+
+    @Autowired
+    SchedualServiceHi schedualServiceHi;
+    @RequestMapping(value = "/hi",method = RequestMethod.GET)
+    public String sayHi(@RequestParam String name){
+        return schedualServiceHi.sayHiFromClientOne(name);
+    }
+}

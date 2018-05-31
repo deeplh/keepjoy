@@ -1,0 +1,59 @@
+1.下载激活版本的IDEA
+
+2.分别创建server(服务注册中心)和client(服务提供者)-(Eureka)
+https://blog.csdn.net/forezp/article/details/69696915
+右键工程->创建model-> 选择spring initialir
+下一步->选择cloud discovery->选择 eureka discovery,spring boot web,ribbon
+
+@SpringBootApplication
+@EnableDiscoveryClient
+public class ServiceRibbonApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ServiceRibbonApplication.class, args);
+    }
+
+    @Bean
+    @LoadBalanced
+    RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+}
+
+eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka/
+server.port=8764
+spring.application.name=service-ribbon
+
+
+@Service
+public class HelloService {
+
+    @Autowired
+    RestTemplate restTemplate;
+
+    public String hiService(String name) {
+        return restTemplate.getForObject("http://SERVICE-HI/hi?name="+name,String.class);
+    }
+
+}
+
+@RestController
+public class HelloControler {
+
+    @Autowired
+    HelloService helloService;
+    @RequestMapping(value = "/hi")
+    public String hi(@RequestParam String name){
+        return helloService.hiService(name);
+    }
+
+}
+
+在浏览器上多次访问http://localhost:8764/hi?name=deep
+
+
+一个服务注册中心，eureka server,端口为8761
+service-hi工程跑了两个实例，端口分别为8762,8763，分别向服务注册中心注册
+sercvice-ribbon端口为8764,向服务注册中心注册
+当sercvice-ribbon通过restTemplate调用service-hi的hi接口时，因为用ribbon进行了负载均衡，会轮流的调用service-hi：8762和8763 两个端口的hi接口；
