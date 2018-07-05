@@ -1,0 +1,83 @@
+垃圾回收
+垃圾回收机制的工作目标是回收无用对象的内存空间,
+这些内存空间都是jvm堆内存（运行时数据区,用以保存类的实例,即对象）里的内存空间
+
+1.年轻代（Young Generation）
+eden survivor(一般>=2)
+
+2.年老代（Old Generation）
+在年轻代中经历了N次垃圾回收后仍然存活的对象,就会被放到年老代中
+
+3.持久代（Permanent Generation）
+用于存放静态文件,如Java类、方法等。
+持久代对垃圾回收没有显著影响,但是有些应用可能动态生成或者调用一些class,
+例如Hibernate等,在这种时候需要设置一个比较大的持久代空间来存放这些运行过程中新增的类
+
+Minor GC
+一般情况下,当新对象生成,并且在Eden申请空间失败时,就会触发Minor GC,
+对Eden区域进行GC,清除非存活对象,并且把尚且存活的对象移动到Survivor区。
+然后整理Survivor的两个区。这种方式的GC是对年轻代的Eden区进行,不会影响到年老代
+
+Full GC
+对整个堆进行整理,包括Young、Old和Perm。
+Full GC因为需要对整个对进行回收,所以比Full GC要慢,
+因此应该尽可能减少Full GC的次数。在对JVM调优的过程中,很大一部分工作就是对于Full GC的调节。
+有如下原因可能导致Full GC
+年老代（Old）被写满
+持久代（Perm）被写满
+System.gc() 被显示调用
+上一次GC之后Heap的各域分配策略动态变化
+
+
+JVM内存的系统级的调优主要的目的是减少Minor GC的频率和Full GC的次数,
+过多的Minor GC和Full GC是会占用很多的系统资源,影响系统的吞吐量。
+
+1.年轻代分三个区,一个Eden区,两个Survivor区（from和to区） -XXSurvivorRatio
+默认-XX:SurvivorRatio＝8,表示Survivor区与Eden区的大小比值是1:1:8,
+在MinorGC过程,如果survivor空间不够大,不能够存储所有的从eden空间和from suvivor空间复制过来活动对象,
+溢出的对象会被复制到old代,溢出迁移到old代,会导致old代的空间快速增长
+
+2.大部分对象在先在Eden区中申请内存。 -XX:PreTenureSizeThreShold
+令大于这个值的对象直接保存到年老代,避免在Eden区与Survivor区之间频繁地通过复制算法回收内存
+
+3.当Eden区满时,无法为新的对象分配内存时,会进行Minor GC对其回收无用对象占用的内存,
+如果还有存活对象,则将存活的对象复制到Survivor From区（两个中Survivor对称）;
+然后从Eden区存活下来的对象,就会被复制到From,当这个From区满时,此区的存活对象将被复制到To区,
+接下来Eden区存活下来的对象就会被复制到To区,经历一定的次数Minor GC后,还存活的对象,将被复制“年老区(Tenured)”。
+
+Minor默认15次,可通过-MaxTenuringThreshold参数调整年轻代回收次数,防止对象过早进入年老代,
+降低年老代溢出的可能性
+
+调优常用:
+1.-Xms and -Xmx (or: -XX:InitialHeapSize and -XX:MaxHeapSize):
+指定JVM的初始和最大堆内存大小,两值可以设置相同,以避免每次垃圾回收完成后JVM重新分配内存
+
+2.-Xmn 设置年轻代大小。
+整个堆大小=年轻代大小+年老代大小+持久代大小。所以增大年轻代后,将会减小年老代大小。
+此值对系统性能影响较大,Sun官方推荐配置为整个堆的3/8
+
+3.-Xss
+设置每个线程的堆栈大小,JDK5.0以后每个线程堆栈大小为1M。在相同物理内存下,
+减小这个值能生成更多的线程。但是操作系统对一个进程内的线程数还是有限制的,不能无限生成
+
+4.-XX:+HeapDumpOnOutOfMemoryError and -XX:HeapDumpPath
+让JVM在发生内存溢出时自动的生成堆内存快照（堆内存快照文件有可能很庞大，推荐将堆内存快照生成路径指定到一个拥有足够磁盘空间的地方。）
+
+5.-XX:OnOutOfMemoryError
+当内存溢发生时,我们甚至可以可以执行一些指令,比如发个E-mail通知管理员或者执行一些清理工作
+（$ java -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/heapdump.hprof -XX:OnOutOfMemoryError ="sh ~/cleanup.sh" MyApp）
+
+6.-XX:PermSize and -XX:MaxPermSize
+设置永久代大小的初始值和最大值,
+默认:最小值为物理内存的1/64,最大值为物理内存的1/16,
+永久代在堆内存中是一块独立的区域,这里设置的永久代大小并不会被包括在使用参数-XX:MaxHeapSize 设置的堆内存大小中）
+
+7.-XX:PretenureSizeThreshold
+令大于这个设置值的对象直接在老年代分配,这样做的目的是避免在Eden区及两个Survivor区之间发生大量的内存复制
+
+
+GC相关命令
+观察GC情况
+jstat -gcutil 67495 1000   //每一秒观察一次进程号67495的GC情况
+堆内存情况
+jstat -gccapacity 67495

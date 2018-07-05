@@ -1,0 +1,11 @@
+集合排序
+Comparable需要接口实现,单一排序
+Comparator支持多种
+
+ex:Collections.sort(list,new Comparator(){
+   ...
+});
+
+Comparator CHINA_COMPARE=Collator.getInstance(java.util.Locale.CHINA);
+
+
