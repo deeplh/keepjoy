@@ -1,0 +1,10 @@
+org.springframework.transaction.interceptor.TransactionAspectSupport
+
+
+org.springframework.transaction.interceptor.TransactionInterceptor
+
+
+org.springframework.jdbc.datasource.DataSourceTransactionManager
+
+
+org.springframework.transaction.support.TransactionSynchronizationManager
