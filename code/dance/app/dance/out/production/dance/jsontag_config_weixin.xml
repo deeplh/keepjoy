@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <!-- 微信接口实现-->
+    <weixin>
+    	<!-- 是否是测试模式,默认:false -->
+   		<test-mode>false</test-mode>
+    	<!-- 公众号相关接口 -->
+   
+   		
+   		<!-- 小程序 -->
+   		<small-platforms>
+   			<platform>
+   				<platform-name>dance</platform-name>
+   				<app-id>wx4134e1aa837768c4</app-id>
+		    	<app-secret>bd5bcf597989d168742ad57fe70773db</app-secret>
+		    	<security>
+		    		<associate-user-class>com.dance.security.weixin.SmallPlatformUserDetailImpl</associate-user-class>
+		    	</security>
+   			</platform>
+   		</small-platforms>
+    </weixin>

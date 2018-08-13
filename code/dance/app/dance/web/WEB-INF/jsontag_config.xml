@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jsontag_config>
+	<!--请求参数的编码格式 -->
+	<request-param-encoding>utf-8</request-param-encoding>
+	<!-- jtLog日志的模式 -->
+	<jt-log-mode>true</jt-log-mode>
+	<!--DEBUG模式 -->
+	<debug-mode>true</debug-mode>
+	
+	<vos-package>
+		<list>
+			<value>com.dance.vos</value>
+		</list>
+	</vos-package>
+
+	<!--数据库相关 -->
+	<session-factory-spring-bean-name>mySessionFactory</session-factory-spring-bean-name>
+	<data-source-bean-name>dataSourceTarget</data-source-bean-name>
+
+	<!-- 数据字典 -->
+	<data-dict></data-dict>
+	
+	<upload-file>upload</upload-file>
+	
+    <code-generator>
+   		<template-folder></template-folder>
+   		<target-folder>/Users/deep/java/code</target-folder>
+   		<java>
+   			<po-prefix>TblDance</po-prefix>
+   			<base-package>com.dance.vos.admin</base-package>
+   		</java>
+   	</code-generator>
+   	
+    <!--<jt-callback>com.shm2tv.service.Shm2tvService</jt-callback>-->
+
+	<!-- 线程池 -->
+	<thread-pool>
+		<!-- 核心池的大小(即线程池中的线程数目大于这个参数时，提交的任务会被放进任务缓存队列) -->
+		<core-pool-size>10</core-pool-size>
+		<!-- 线程池最大线程数 -->
+		<maximum-pool-size>100</maximum-pool-size>
+		<!-- 线程存货时间(如果一个线程空闲的时间达到keepAliveTime,则会终止),单位毫秒 -->
+		<keep-alive-time>10000</keep-alive-time>
+		<!-- 核心工作队列大小 -->
+		<work-queue-size>500</work-queue-size>
+	</thread-pool>
+
+    
+</jsontag_config>

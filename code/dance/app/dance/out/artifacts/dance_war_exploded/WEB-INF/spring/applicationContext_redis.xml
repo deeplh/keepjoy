@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"	
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+ 
+  
+  
+	 <!-- jedis pool配置 -->   
+	 <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">    
+	     <property name="maxIdle" value="100" />   
+	     <property name="maxActive" value="300" />    
+	     <property name="maxWait" value="3000" />    
+	     <property name="testOnBorrow" value="false" />    
+	 </bean>    
+     
+	 <!-- spring data redis -->    
+	 <!-- 开发环境 -->
+	 
+	 <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">    
+	     <property name="usePool" value="true" />    
+	     <property name="hostName" value="120.79.158.55" />    
+	     <property name="port" value="16379" />    
+<!-- 	     <property name="password" value="tyredis123" />
+ -->	     <property name="timeout" value="3000" />    
+	     <property name="database" value="0" />    
+	     <constructor-arg index="0" ref="poolConfig" />  
+	 </bean>      
+	  
+	  <!-- 生产环境 -->
+	  <!-- <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">    
+	     <property name="usePool" value="true" />    
+	     <property name="hostName" value="10.1.49.21" />    
+	     <property name="port" value="6379" />    
+	     <property name="password" value="tyredis123" />
+	     <property name="timeout" value="3000" />    
+	     <property name="database" value="0" />    
+	     <constructor-arg index="0" ref="poolConfig" />  
+	 </bean>   -->   
+	 <!--  redis模板类 -->    
+	 <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">    
+	     <property name="connectionFactory"   ref="connectionFactory" /> 
+	     <property name="keySerializer">
+         	<bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>   
+         </property>
+         <!-- 20171016新加，VALUE存储User类型时若不指定valueSerializer，则会报类型转换错误（can not cast User to String），
+         User也必须继承Serializable接口，否则无法识别，author:zhangsw -->
+         <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+         </property>
+         
+	 </bean>  
+	   
+	  
+ 
+</beans>

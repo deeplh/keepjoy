@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE taglib PUBLIC
+                 "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+                 "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+	<tlib-version>1.0</tlib-version>
+  	<jsp-version>1.2</jsp-version>
+  	<short-name>json_tag</short-name>
+  	<uri>/jsontag</uri>
+  	<description></description>
+	
+	
+	
+	<tag>
+	    <name>select_sql</name>
+	    <tag-class>jsontag.module.tag.JsonTagSelectSqlTag</tag-class>
+	    <attribute>
+			<name>sqlContent</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		 <attribute>
+			<name>sqlType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>parameters</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>hideFields</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+	    <name>cache</name>
+	    <tag-class>jsontag.module.cache.tag.JsonTagCacheTag</tag-class>
+	    <attribute>
+			<name>cacheKey</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>	
+	
+	<tag>
+	    <name>data_dict</name>
+	    <tag-class>jsontag.module.datadict.tag.JsonTagDataDictTag</tag-class>
+	    <attribute>
+			<name>dataDictType</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>	
+</taglib>

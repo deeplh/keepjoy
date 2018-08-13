@@ -1,0 +1,29 @@
+<component name="libraryTable">
+  <library name="jsontag">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/thirdlib/mustache-java-0.8.11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/log4j-1.2.16.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/jsoup-1.8.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/fastjson-1.1.41.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/druid-1.0.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/jsontag-security-mysql-1.5.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/xstream-1.3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/xpp3-1.1.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/stax-api-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/guava-18.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/httpmime-4.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/httpcore-4.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/httpclient-4.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/commons-fileupload-1.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/jsontag-2.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/jsontag-weixin-mysql-1.3.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/spring-data-redis-1.0.0.RELEASE.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/jedis-2.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/commons-pool.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/jsontag-weixin-1.3.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/thirdlib/jsontag-security-1.6.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

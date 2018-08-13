@@ -1,0 +1,23 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="dance">
+    <output-path>$PROJECT_DIR$/out/artifacts/dance</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="javaee-facet-classes" facet="dance/web/Web" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="commons-io-2.0.1" />
+          <element id="library" level="project" name="commons-lang3-3.1" />
+          <element id="library" level="project" name="Hibernate 3.6.10-3.6.10" />
+          <element id="library" level="project" name="JPA 2.0-2.0" />
+          <element id="library" level="project" name="jsontag" />
+          <element id="library" level="project" name="mysql-connector-java-5.1.23-bin" />
+          <element id="library" level="project" name="Spring-4.3.16.RELEASE" />
+          <element id="library" level="project" name="Spring MVC-4.3.16.RELEASE" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="dance/web/Web" />
+    </root>
+  </artifact>
+</component>

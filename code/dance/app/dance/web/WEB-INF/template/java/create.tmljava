@@ -1,0 +1,45 @@
+package {{packageClass}};
+
+
+
+import {{poBeanPackageClass}};
+import java.util.Date;
+import jsontag.annotation.JsonTagAnnotation;
+import jsontag.annotation.onlineapi.JtOnlineApi;
+import jsontag.annotation.validation.MyValidation;
+import jsontag.dao.JsonTagTemplateDaoImpl;
+import jsontag.interf.IDoService;
+
+@JtOnlineApi(describe="",name="")
+@JsonTagAnnotation(actionValue="{{actionValue}}",namespace="{{adminNamespace}}")
+public class {{className}} extends JsonTagTemplateDaoImpl implements IDoService<Object>{
+
+
+	{{#fields}}
+	@JtOnlineApi(describe="",name="")
+	@MyValidation(exceptionDesc="{{name}}格式异常")
+	private {{type}} {{name}};
+	
+    {{/fields}}
+
+	
+	@Override
+	public Object doService() throws Exception {
+		{{poBeanClass}} obj=new {{poBeanClass}}();
+		{{#fields}}
+		 obj.{{setMethod}}({{name}});
+		{{/fields}}
+		save(obj);
+		return "创建成功";
+	}
+
+	{{#fields}}
+		public {{type}} {{getMethod}}() {
+			return this.{{name}};
+		}
+		public void {{setMethod}}({{type}} {{name}}) {
+			this.{{name}} = {{name}};
+		}
+	{{/fields}}
+	
+}

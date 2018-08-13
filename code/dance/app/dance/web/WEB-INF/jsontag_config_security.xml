@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+     <!-- 权限 -->
+    <security>
+    	<!-- 超级管理员登陆模式 -->
+    	<superadmin-login-mode>true</superadmin-login-mode>
+    	
+    	
+    	<session-timeout>600</session-timeout>
+		<!-- 记住我的时间(单位:天) -->
+		<remember-me-time>10</remember-me-time>
+		<!-- 权限不足跳转到的页面(带斜杠的绝对路径) -->
+		<access-denied-page>/</access-denied-page>
+		<!-- 没有登录时跳转到的页面 -->
+		<not-login-page>/</not-login-page>
+		
+		<sso-mode>true</sso-mode>
+
+		<session-custom-key>dance</session-custom-key>
+		<!-- 登陆后操作的实现类 -->
+<!-- 	<after-authentication-handler-class-name>test.security.AfterAuthenticationHandler</after-authentication-handler-class-name> -->
+	<!-- 登陆流程的实现类 -->
+ 	<!--<user-details-service-class-name>com.shm2tv.security.UserDetailImpl</user-details-service-class-name> -->
+	
+	<!-- 自定义的资源,如果这边定义了,以这边为主-->
+		<resources>
+				 <!--<resource>-->
+					<!--<url>/app/*</url>-->
+					<!--<security>ALL</security>-->
+				<!--</resource>-->
+				<resource>
+					<url>/app/style/search.action</url>
+					<security>NONE</security>
+				</resource>
+				<resource>
+					<url>/app/event/search.action</url>
+					<security>NONE</security>
+				</resource>
+				<resource>
+					<url>/admin/*</url>
+					<security>ROLE_SUPER_ADMIN</security>
+				</resource>
+		</resources>
+	   
+
+    </security>

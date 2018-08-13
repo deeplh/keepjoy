@@ -1,0 +1,35 @@
+package {{packageClass}};
+
+
+import {{poBeanPackageClass}};
+import java.util.Date;
+import jsontag.annotation.JsonTagAnnotation;
+import jsontag.annotation.onlineapi.JtOnlineApi;
+import jsontag.annotation.pagination.JsonTagPaginationAction;
+import jsontag.annotation.pagination.PaginationField;
+import jsontag.annotation.validation.MyValidation;
+
+@JtOnlineApi(describe="",name="")
+@JsonTagAnnotation(actionValue="{{actionValue}}",namespace="{{adminNamespace}}")
+@JsonTagPaginationAction(listBeanClass={{poBeanClass}}.class
+		,sql=" from {{poBeanClass}} where 1=1 ",isReturnSingleObject=true)
+public class {{className}} {
+
+
+	{{#fields}}
+	@MyValidation(exceptionDesc="{{name}}格式异常")
+	@PaginationField(sql=" and {{name}}=:{{name}} ")
+	private {{type}} {{name}};
+	
+    {{/fields}}
+
+	{{#fields}}
+		public {{type}} {{getMethod}}() {
+			return this.{{name}};
+		}
+		public void {{setMethod}}({{type}} {{name}}) {
+			this.{{name}} = {{name}};
+		}
+	{{/fields}}
+	
+}
