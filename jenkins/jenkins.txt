@@ -1,0 +1,119 @@
+jenkins自动部署:
+svn+maven+ssh
+百度安装idk,maven,jenkins-https://my.oschina.net/vechar/blog/1605873
+
+1.配置ssh帐号
+  Credentials中首先配置好ssh帐号的用户
+2.配置Publish over SSH
+  manage jerkins-manage plugins,查找ssh后添加插件
+  manage jerkins-Configure System-Publish over SSH
+
+3.部署配置
+1).创建free模版的项目
+
+2).general-advanced-Use custom workspace
+  Directory /opt/svn/bcwms
+  Display Name bcwms
+
+3).Source Code Management-Subversion
+  Repository URL svn://www.inesanet.com:13690/YDWL-1609-011-KF_上海轨道二运/E-2代码/bcwms
+
+4).Build Environment-Send files or execute commands over SSH after the build runs
+  Source files	target/bcwms-0.0.1-SNAPSHOT.jar,target/classes/run.sh  很重要,必须是相对路径
+  Remove prefix
+  Remote directory /opt/jar
+  Exec command 
+  见 run.sh
+
+5).Build
+  Execute shell
+  Command 
+  echo "maven compile"
+  cd /opt/svn/bcwms
+  mvn install
+
+
+
+其他问题
+1.注意jenkins自动杀进程的问题
+JENKINS_NODE_COOKIE=dontkillme
+或者在节点控制界面加入环境变量
+
+2.启动
+nohup java -Dhudson.util.ProcessTree.disable=true -jar /opt/jenkins/jenkins.war --httpPort=18888 > /opt/jenkins/log/jenkins.log 2>&1 &
+
+
+3.编译
+3.1.配置maven环境变量,设置本地jar
+
+mvn install:install-file   -Dfile=/opt/svn/bcwms/src/main/webapp/WEB-INF/lib/boogie-client.jar  -DgroupId=com.bcwms.boogie  -DartifactId=boogie -Dversion=1.0  -Dpackaging=jar
+
+mvn install:install-file   -Dfile=/opt/svn/bdtt/lib/springboot-keepjoy-1.2.jar  -DgroupId=com.keepjoy  -DartifactId=keepjoy -Dversion=1.2  -Dpackaging=jar
+
+mvn install:install-file   -Dfile=/opt/svn/bdtt/lib/ojdbc8.jar  -DgroupId=com.oracle  -DartifactId=ojdbc8 -Dversion=12.2.0.1.0  -Dpackaging=jar
+
+4.设置ssh上传jar的目录
+项目-Post-build Actions-send build artifacts over SSH
+
+
+
+－－－－－－－－－shell－－－－－－－－－－－－
+
+1.本地jenkins脚本
+
+echo "maven compile"
+cd /opt/svn/bcwms
+mvn install
+
+
+echo "stopping springboot application"
+pid=`ps -ef | grep bcwms-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}'`
+echo "pid"
+echo $pid
+if [ -n "$pid" ]
+then
+   echo "kill"
+   kill -9 $pid
+fi
+
+
+cur_date=`date +%Y-%m-%d,%H:%m:%s`
+echo $cur_date
+
+cd /opt/svn/bcwms/target
+cp bcwms-0.0.1-SNAPSHOT.jar bcwms-0.0.1-SNAPSHOT-$cur_date.jar
+
+echo "starting springBoot application"
+
+BUILD_ID=dontKillMe
+JENKINS_NODE_COOKIE=dontkillme
+nohup java -jar bcwms-0.0.1-SNAPSHOT.jar --server.port=8888 &
+
+
+2.远程部署启动脚本
+
+echo "backup springboot application"
+cur_date=`date +%Y-%m-%d,%H%m%s`
+echo $cur_date
+
+cp /opt/jar/bcwms-0.0.1-SNAPSHOT.jar /opt/jar/bcwms-0.0.1-SNAPSHOT-$cur_date.jar
+
+cp /opt/jar/target/bcwms-0.0.1-SNAPSHOT.jar /opt/jar/bcwms-0.0.1-SNAPSHOT.jar
+
+echo "stopping springboot application"
+pid=`ps -ef | grep bcwms-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}'`
+echo "pid"
+echo $pid
+if [ -n "$pid" ]
+then
+echo "kill"
+kill -9 $pid
+fi
+
+
+echo "starting springBoot application"
+
+BUILD_ID=dontKillMe
+JENKINS_NODE_COOKIE=dontkillme
+/opt/java/jdk/jdk1.8.0_181/bin/java -jar /opt/jar/bcwms-0.0.1-SNAPSHOT.jar --server.port=8888
+
